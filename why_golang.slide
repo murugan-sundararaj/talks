@@ -11,3 +11,14 @@ Flipkart
 - Go is a statically typed, garbage-collected, natively compiled programming language.
 - There are many tools avaialable to improve the quality and efficiency of Go code.
     - gofmt for example formats your code. 
+
+- Stand-alone functions, of course. Who disallows those?
+- Short variable declaration ( `:=` ) infers type from RHS
+- Go source is UTF-8 by specification
+- Hit the "Run" button to execute the code above
+
+* Concurrency
+- Go lets you write concurrent program without worrying about the number of threads or thread pool
+- Go uses green threads (lightweight threads) called goroutines.
+- Create thousands of them, if not tens.
+- Use channels to communicate between goroutines.
