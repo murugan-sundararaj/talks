@@ -1,21 +1,14 @@
 Why golang?
-Why for Anomaly Manager REST service (AMS)
+Why for AMS
 
 Murugan Sundararaj
 Flipkart
-@murugan-sundararaj
 
+* What is Go?
 
+- Go is an open source project developed by a team at Google and many contributors from the open source community.
 
-* Quick Examples
+- Go is distributed under a BSD-style license.
 
-* Hello World
-- Stand-alone functions, of course. Who disallows those?
-- Short variable declaration ( `:=` ) infers type from RHS
-- Go source is UTF-8 by specification
-- Hit the "Run" button to execute the code above
-
-* Fibonacci
-
-- Closures, FTW!
-- Buggy implementation. I deferred the fix.
+- Go is a statically typed, garbage-collected, natively compiled programming language.
+- A lot of open source libraries and tools are available today.
