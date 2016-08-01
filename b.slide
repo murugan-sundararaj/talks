@@ -1,0 +1,83 @@
+Rethinkdb and ES comparison 
+In the purview of Anomaly Detection
+
+Murugan Sundararaj
+Flipkart
+
+* What is Anomaly Detection
+* In simple terms
+- Look for outliers in the computed FSP.
+- It could be an outlier in Retail or MP FSP.
+
+* How it is done?
+* Events
+- Listen for price change events.
+- Collect necessary data before applying the detection algorithm. 
+    Look at the past FSP.
+    Look at the past sales.
+- Apply the algorithm.
+- Raise alert if needed.
+
+* SLA
+* Detection rate
+- Find anomalies as and when FSP is computed.
+- In other words, work at the speed of FSP compute.
+
+* What kind of datastore is not-needed?
+* Not so useful
+- One that provides
+    - Full text search.
+    - Transaction capability.
+- Having the above said capabilities is not harmful. But it will remain largely unusued.
+
+* So, what kind of datastore is helpful?
+* Data store requirement
+- Horizontally scalable
+    Need to store historical data.
+- Faster retrieval
+    Able to fetch relavant data within SLA. 
+- First class support for running analytical queries
+    avg, min, max, etc
+- Flexible schema
+    After all, we need to run analytical queries and evolve the queries with additional data points during the course of time.
+- Document store fits the bill.
+
+* Contd...
+- May not need in-place update capability
+    Pretty much all the data point’s of a listing history is needed. 
+    Rather than collating the history under a single doc, let us store them individually and aggregate later during reads.
+    Hence, every price change of a listing can be stored without upserting any existing document. 
+    ** Benefits
+    - No hassles of data integrity checks.
+    - The total number of docs is going to be humongous.
+Given a price change rate of 2.5M/day it would end up storing more than 200M docs for just 90 days.
+Should be able to horizontally scale the doc’s table.
+Able to run anonymous function on the server side
+Rather than pulling all the docs off the store and run the needed function on the client side
+For example: get all the mobile listings whose fsp is equal to its ssp
+r.db("pricing").table("listing")
+  .getAll(“mobile", {index: ‘vertical'})
+  .filter(function(row) {
+    return row('fsp').eq(row('ssp'))
+  })
+
+
+
+
+Rethinkdb
+License: gnu agpl
+Integrity model: MVCC
+Programming language: C++
+Number of shards can be re-configured. Supports 1.6
+Secondary index capability
+Supports 1.7
+ES
+License: apache
+Integrity model: eventual consistency
+Programming language: Java
+Number of primary shards are fixed at the time of creating the index
+There might be ways to work around this limitation but it is not clean.
+Do not support 1.6
+Secondary index capability
+Do not support 1.7
+
