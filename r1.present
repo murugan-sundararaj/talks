@@ -1,0 +1,31 @@
+Rethinkdb and ES comparison 
+In the purview of Anomaly Detection
+
+Murugan Sundararaj
+Flipkart
+
+* What is Anomaly Detection
+* In simple terms
+- Look for outliers in the computed FSP.
+- It could be an outlier in Retail or MP FSP.
+
+* How it is done?
+* Events
+- Listen for price change events.
+- Collect necessary data before applying the detection algorithm. 
+    Look at the past FSP.
+    Look at the past sales.
+- Apply the algorithm.
+- Raise alert if needed.
+
+* SLA
+* Detection rate
+- Find anomalies as and when FSP is computed.
+- In other words, work at the speed of FSP compute.
+
+* What kind of datastore is not-needed?
+* Not so useful
+- One that provides
+    - Full text search.
+    - Transaction capability.
+- Having the above said capabilities is not harmful. But it will remain largely unusued.
