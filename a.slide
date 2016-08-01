@@ -1,0 +1,128 @@
+Why golang?
+Why for Anomaly Manager REST service (AMS)
+
+Murugan Sundararaj
+Flipkart
+@murugan-sundararaj
+
+* What is Go?
+
+* Go
+- open source project developed by a team at Google and many contributors from the open source community.
+- distributed under a BSD-style license.
+- statically typed
+- garbage-collected
+- natively compiled _no need to battle with differenct versions of JVM_
+- Object oriented
+- Concurrency friendly
+    It is part of the language, not a library.
+
+* Using all the cores...
+* squeeze enough juice out of the machine
+
+* Tools
+- plenty of tools available to improve the quality and efficiency of Go code.
+    _gofmt_ for example formats your code. As a nice side effect all Go code will have uniform format.
+    _go-torch_ for profiling
+
+* GC
+* No more GC tuning
+- As said earlier, Go is a garbage collected language.
+- Go compiler team is working aggressively on reducing the GC latency.
+- Today Go GC latencies are below 10 ms. Improved further in Go1.6. Even more in Go1.7 (currently in beta).
+- provide a link to GC video. 10ms under what scenario?
+
+* Other Benefits
+* Plus points
+- Learning curve is simple.
+- Profiling, testing, debugging are not afterthoughts.
+- Built in support for Concurrent programming.
+- Simple Build system.
+- Simple Dependency management.
+
+* Who is using in production
+* Go in production
+- Some popular datastores built using Go
+etcd - Distributed reliable key-value store for the most critical data of a distributed system
+- Cockroachdb (beta) - Distributed, scale-out, sql database
+- Influxdb
+- Flipkart PaaS.
+
+* But why use it in AMS
+* Reasons
+- One of the most compelling reasons for using Go is having the concept of concurrent asynchronous programming as part of the language.
+- The argument always came up that you can do asynchronous programming in Java...but it isn’t pretty. 
+- My argument was always that “We can keep doing it in Java,” ….but just because you can do something with a technology doesn’t mean its the best way to do it.
+
+* Workflow:
+Each price change event POSTed to AMS might contain one or more listings.
+_Scatter_
+Loop through the event and extract the listing block one after the other.
+The moment a listing block is extracted, somebody can process the same while the next listing is extracted.
+Essentially, each listing is processed as they are unpacked from the event.
+Each process in turn would involve more than one network call
+     To get the past price changes of the listing
+     To get the corresponding sales data
+     To get x,y,z in the future
+_Gather_
+Collect the results from various pipelines.
+Apply the detection algorithm.
+Some algorithms need not wait for all pipelines to finish.
+Send the response.
+
+* Three key nfr (there could be more) needed for effective REST service
+- Non-blocking i/o calls
+- Timeouts on external calls
+- Limit the rate of input — _rate limiting_
+- Implementing in Go is *easy and elegant*
+
+* Bit of Go concurrency constructs
+
+* goroutines
+- Go lets you write concurrent program without worrying about the number of threads or thread pool.
+- Go uses green threads (lightweight threads) called goroutines.
+- Create thousands of them, if not tens.
+- Use channels to communicate between goroutines.
+
+* channels
+- Provides a powerful way to reason about the flow of data from one goroutine to another. 
+- Without the use of locks or critical sections.
+- Typed pipes used to communicate and synchronize between goroutines
+
+So cheap you can use them whenever you want.
+
+* Non-blocking i/o
+
+* Known fact
+- blocking GET call
+.play blocking/main.go
+
+* goroutines everywhere!
+.play non_blocking/main.go
+
+* Timeouts
+* Timebound the External calls
+- https://gobyexample.com/timeouts
+
+* Limit the rate of input — _rate limiting_
+- Rate limiting is an important mechanism for controlling resource utilization and maintaining quality of service. 
+- Go elegantly supports rate limiting with goroutines, channels, and tickers.
+- https://gobyexample.com/rate-limiting
+
+
+* References
+- Fransec Campoy
+Go: Object oriented and concurrent
+Just not the usual way
+https://www.youtube.com/watch?v=Ng8m5VXsn8Q
+
+
+* Still not convinced?
+Hear from the co-creator of Go, Rob Pike https://www.youtube.com/watch?v=FTl0tl9BGdc#t=196.999387
+* Generics?
+* Discussed here
+https://appliedgo.net/generics/
+
+* DI
+* here
+https://appliedgo.net/di/
